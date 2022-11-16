@@ -4,6 +4,7 @@ import com.example.backendspringboottechiteasycontroller.exceptions.RecordNotFou
 import com.example.backendspringboottechiteasycontroller.service.Television;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.server.DelegatingServerHttpResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -18,9 +19,6 @@ public class TelevisionController {
 
     public TelevisionController(){
         televisions = new ArrayList<>();
-        Television tv = new Television();
-        tv.setBrandName("test1");
-        tv.setBrandName("test2");
 
     }
 
@@ -31,7 +29,7 @@ public class TelevisionController {
 
     @GetMapping("/televisions/{id}")
     public ResponseEntity<Television> getTelevisions(@PathVariable int id) {
-        if (id < 10) {
+        if (id >= 0 && id < televisions.size()) {
             return new ResponseEntity<>(televisions.get(id), HttpStatus.OK);
         } else {
             throw new RecordNotFoundException("ID not valid");
@@ -48,17 +46,22 @@ public class TelevisionController {
     public ResponseEntity<Object> updateTelevision(@PathVariable int id, @RequestBody Television tv) {
               televisions.set(id, tv);
               if (id >= 0 && id < televisions.size()) {
-                  return new ResponseEntity<>(tv, HttpStatus.OK);
+//                  return new ResponseEntity<>(tv, HttpStatus.OK);
+                  return ResponseEntity.ok(tv);
               } else {
 //                  throw new RecordNotFoundException("ID not exist");
                   return new ResponseEntity<>("invalid ID", HttpStatus.BAD_REQUEST);
               }
     }
-}
 
-//
-//        GET-request voor alle televisies
-//        een GET-request voor 1 televisie
-//        een POST-request voor 1 televisie
-//        een PUT-request voor 1 televisie
-//        een DELETE-request voor 1 televisie
+    @DeleteMapping("/televisions")
+    public ResponseEntity<Object> deleteTelevision(@RequestBody String tv) {
+        for (int i = 0; i < televisions.size(); i++) {
+            if (televisions.get(i).getBrandName().equals(tv)) {
+                televisions.remove(i);
+                return new ResponseEntity<>("Item removed", HttpStatus.NO_CONTENT);
+            }
+        }
+        return new ResponseEntity<>("No television found", HttpStatus.BAD_REQUEST);
+    }
+}
