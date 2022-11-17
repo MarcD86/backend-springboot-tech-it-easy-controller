@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.example</groupId>
     <artifactId>backend-spring-boot-tech-it-easy-controller</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0</version>
     <name>backend-spring-boot-tech-it-easy-controller</name>
     <description>backend-spring-boot-tech-it-easy-controller</description>
     <properties>
